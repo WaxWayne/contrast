@@ -1,0 +1,27 @@
+{
+  "name": "contrast",
+  "version": "1.0.0",
+  "description": "image manipulation with WebAssembly and JS",
+  "main": "js_contrast.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WaxWayne/WebAssembly/contrast.git"
+  },
+  "keywords": [
+    "Rust",
+    "WebAssembly",
+    "WebHackTokyo"
+  ],
+  "author": "Ziad Jabri",
+  "license": "ISC",
+  "devDependencies": {
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.9.0"
+  }
+}

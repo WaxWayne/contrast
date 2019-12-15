@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <title><%= htmlWebpackPlugin.options.title %></title>
+  <link rel="stylesheet" type="text/css" href="layout.css" />
+</head>
+<body>
+  <div class="knob-container">
+    <label name="select-file">
+      Select an image:
+      <input
+        type="file"
+        accept="image/*"
+        capture="camera"
+        name="src-image"
+        id="src-picker"
+      />
+    </label>
+    <br />
+    <label name="contrast">
+      Adjust contrast:
+      <input type="range" min="-255" max="255" id="adjust-contrast-js" />
+      <span id="adjust-contrast-value">0</span>
+    </label>
+    <br />
+    <label name="wasm">
+      <input type="checkbox" id="use-webassembly" />Use WebAssembly
+    </label>
+    <br />
+    <label name="performance">
+      Performance:
+      <span id="processing-duration">n/a</span>
+    </label>
+  </div>
+  <div class="image-container">
+    <div class="pane">
+      <canvas id="src-image" width="4096" height="4096"></canvas>
+    </div>
+    <div class="pane">
+      <canvas id="dst-image" width="4096" height="4096"></canvas>
+    </div>
+  </div>
+</body>
