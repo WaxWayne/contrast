@@ -30,7 +30,7 @@ WebAssembly library requires Rust with target wasm32-unknown-unknown.
 
 ```
 cargo build --target wasm32-unknown-unknown --release
-wasm-bindgen target/wasm32-unknown-unknown/release/contrast.wasm --out-dir .
+wasm-bindgen target/wasm32-unknown-unknown/release/contrast.wasm --out-dir ./wasm
 ```
 
 ## Build and start demo app
