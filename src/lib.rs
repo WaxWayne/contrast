@@ -14,15 +14,15 @@ fn scale_color_byte(color: u8, factor: i32) -> u8 {
 }
 
 #[wasm_bindgen]
-pub fn contrast(
+pub fn contrast_in_rust(
     dst_ctx: &CanvasRenderingContext2d,
-    src_image_data: &ImageData,
+    src_ctx: &CanvasRenderingContext2d,
     width: u32,
     height: u32,
     value: i32,
 ) -> Result<(), JsValue> {
-    let factor: i32 = (259 * 256 * (value + 255)) / (255 * (255 - value));
-    let src_rgba = src_image_data.data();
+    let factor: i32 = (259 * 256 * (value + 255)) / (255 * (255 - value)); 
+    let src_rgba = src_ctx.get_image_data(0.0, 0.0, width as f64, height as f64).unwrap().data();
     let mut dst_rgba: Vec<u8> = Vec::with_capacity(src_rgba.len());
     for i in 0..src_rgba.len() / 4 {
         dst_rgba.push(scale_color_byte(src_rgba[i * 4], factor));

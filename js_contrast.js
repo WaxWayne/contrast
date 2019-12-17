@@ -1,4 +1,4 @@
-import("./contrast").then(({ contrast }) => {
+import("./wasm/contrast").then(({ contrast_in_rust }) => {
   const image2canvas = (id, image) => {
     const canvas = document.getElementById(id);
     const canvasWH = Math.max(image.width, image.height);
@@ -29,15 +29,16 @@ import("./contrast").then(({ contrast }) => {
   const scaleByteValue = (byteValue, scale) =>
     Math.floor((byteValue - 128) * scale + 128);
 
-  const jsContrast = value => {
-    const srcCanvas = document.getElementById("src-image");
-    const { width, height } = srcCanvas;
-    const srcContext = srcCanvas.getContext("2d");
-    const dstContext = document.getElementById("dst-image").getContext("2d");
+  const contrast_in_javascript = (
+    dstContext,
+    srcContext,
+    width,
+    height,
+    value
+  ) => {
     const srcData = srcContext.getImageData(0, 0, width, height);
     const dstData = dstContext.getImageData(0, 0, width, height);
 
-    console.log(`width = ${width} height = ${height}`);
     const factor = (259.0 * (value + 255)) / (255 * (259 - value));
 
     for (let i = 0; i < srcData.data.length; i = i + 4) {
@@ -49,27 +50,19 @@ import("./contrast").then(({ contrast }) => {
     dstContext.putImageData(dstData, 0, 0);
   };
 
-  const wasmContrast = value => {
-    const srcCanvas = document.getElementById("src-image");
-    const { width, height } = srcCanvas;
-    const srcContext = srcCanvas.getContext("2d");
-    const dstContext = document.getElementById("dst-image").getContext("2d");
-    contrast(
-      dstContext,
-      srcContext.getImageData(0, 0, width, height),
-      width,
-      height,
-      value
-    );
-  };
-
   const changeContrast = e => {
     const contrastValue = Number.parseInt(e.target.value, 10);
     document.getElementById("adjust-contrast-value").textContent =
       e.target.value;
+    const srcCanvas = document.getElementById("src-image");
+    const { width, height } = srcCanvas;
+    const srcContext = srcCanvas.getContext("2d");
+    const dstContext = document.getElementById("dst-image").getContext("2d");
     const useWasm = document.getElementById("use-webassembly").checked;
+
     const startTime = Date.now();
-    useWasm ? wasmContrast(contrastValue) : jsContrast(contrastValue);
+    let contrastFn = useWasm ? contrast_in_rust : contrast_in_javascript;
+    contrastFn(dstContext, srcContext, width, height, contrastValue);
     const duration = Date.now() - startTime;
     document.getElementById(
       "processing-duration"
@@ -84,10 +77,10 @@ import("./contrast").then(({ contrast }) => {
     }
   };
 
+  document.getElementById("src-picker").addEventListener("change", addImage);
   document
     .getElementById("adjust-contrast-js")
     .addEventListener("change", changeContrast);
-  document.getElementById("src-picker").addEventListener("change", addImage);
   document
     .getElementById("use-webassembly")
     .addEventListener("change", switchWebAssembly);
